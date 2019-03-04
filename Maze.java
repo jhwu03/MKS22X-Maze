@@ -6,6 +6,8 @@ public class Maze{
     private char[][]maze;
     private boolean animate;//false by default
     private int[][] mazeMove = {{0, -1},{-1, 0},{0, 1},{1, 0}};
+    private int rowOfS, colOfS ;
+    private int[][] directions ;
 
     /*Constructor loads a maze text file, and sets animate to false by default.
 
@@ -29,41 +31,37 @@ public class Maze{
     public Maze(String filename) throws FileNotFoundException{
         //COMPLETE CONSTRUCTOR
         animate = false;
+        int row = 0;
+        int col = 0;
         File text = new File(filename);
         Scanner s = new Scanner(text);
         String line = "";
         while(s.hasNextLine()){
           line = s.nextLine();
-          line = "\n";
+          row++;
         }
-        int row = 0;
-        int col = 0;
-        for(int i = 0; i < line.length() ; i++){
-          if(line.charAt(i) == '\n'){
-            row++;
-          }
-        }
-        col = line.length() / row;
+        col = line.length();
         maze = new char[row][col];
-        int index = 0;
-        for(int r = 0;r <maze.length; r++){
-          for(int c = 0; c < maze[0].length; c++){
-            maze[r][c]= line.charAt(index);
-            index++;
-          }
-        }
+        int r = 0;
         int E = 0;
         int S = 0;
         Scanner read = new Scanner(text);
-        for(int i = 0; i < row; i++){
+        while(r < maze.length && read.hasNextLine()){
           String lineS = read.nextLine();
-          for(int y = 0; y < col; y++){
-            if(lineS.charAt(y) == 'E') E++; //check number of E
-            if(lineS.charAt(y) == 'S') S++; //check number of S
-            maze[i][y] = line.charAt(y);
+        for(int i = 0; i < lineS.length(); i++){
+          maze[r][i] = lineS.charAt(i);
+          if (lineS.charAt(i) == 'S') {
+            S += 1;
+          }
+          if (lineS.charAt(i) == 'E') {
+            E += 1;
           }
         }
-        if(E != 1 || S != 1) throw new IllegalStateException();
+        r++;
+      }
+        if(E != 1 || S != 1){
+           throw new IllegalStateException();
+         }
       }
 
 
