@@ -5,6 +5,7 @@ public class Maze{
 
     private char[][]maze;
     private boolean animate;//false by default
+    private int[][] mazeMove = {{0, -1},{-1, 0},{0, 1},{1, 0}};
 
     /*Constructor loads a maze text file, and sets animate to false by default.
 
@@ -111,6 +112,22 @@ public class Maze{
         return ans;
     }
 
+    public boolean addMove(int row, int col){
+      if(row >= 0 && row < maze.length && col >= 0 && col < maze[0].length){
+       if(maze[row][col] == ' '){
+         maze[row][col] = '@'; //place @
+         return true;
+        }
+      }
+        return false;
+    }
+
+    private boolean removeMove(int row, int col){
+      if(maze[row][col] != '@') return false; //checks if the square was marked
+      maze[row][col] = '.'; //places .
+      return true;
+    }
+
 
 
     /*Wrapper Solve Function returns the helper function
@@ -120,17 +137,22 @@ public class Maze{
 
     */
     public int solve(){
-
+      int corXOfS = 0;
+      int corYOfS = 0;
+      for(int i = 0; i < maze.length; i++){
+        for(int r = 0; r < maze[i].length; r++){
+          if(maze[i][r] == 'S'){
+            corXOfS = i;
+            corYOfS = r;
+            maze[i][r] = ' '; //erase the S
+          }
+        }
+      }
             //find the location of the S.
-
-
             //erase the S
-
-
             //and start solving at the location of the s.
-
             //return solve(???,???);
-
+      return solve(corXOfS, corYOfS, 0);
     }
 
     /*
@@ -150,9 +172,9 @@ public class Maze{
 
         All visited spots that are part of the solution are changed to '@'
     */
-    private int solve(int row, int col){ //you can add more parameters since this is private
+    private int solve(int row, int col, int moveNumber){ //you can add more parameters since this is private
 
-
+      int ans;
         //automatic animation! You are welcome.
         if(animate){
 
@@ -161,11 +183,19 @@ public class Maze{
 
             wait(20);
         }
-
-        //COMPLETE SOLVE
-
-        return -1; //so it compiles
+        if(maze[row][col] == 'E'){
+          return moveNumber;
+        }
+        if(!addMove(row, col)){
+          return -1;
+        }
+        for(int i = 0; i < mazeMove.length; i++){
+          ans = solve(row + mazeMove[i][0], col + mazeMove[i][1], moveNumber + 1);
+        if(ans != -1){
+          return ans;
+        }
+      }
+      removeMove(row,col);
+      return -1;
     }
-
-
-}
+  }
