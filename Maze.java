@@ -42,7 +42,28 @@ public class Maze{
             row++;
           }
         }
-    }
+        col = line.length() / row;
+        maze = new char[row][col];
+        int index = 0;
+        for(int r = 0;r <maze.length; r++){
+          for(int c = 0; c < maze[0].length; c++){
+            maze[r][c]= line.charAt(index);
+            index++;
+          }
+        }
+        int E = 0;
+        int S = 0;
+        Scanner read = new Scanner(text);
+        for(int i = 0; i < row; i++){
+          String lineS = read.nextLine();
+          for(int y = 0; y < col; y++){
+            if(lineS.charAt(y) == 'E') E++; //check number of E
+            if(lineS.charAt(y) == 'S') S++; //check number of S
+            maze[i][y] = line.charAt(y);
+          }
+        }
+        if(E != 1 || S != 1) throw new IllegalStateException();
+      }
 
 
     private void wait(int millis){
@@ -80,9 +101,14 @@ public class Maze{
 
     */
     public String toString(){
-
-            return "WRITE THIS METHOD";
-
+        String ans = "";
+        for(int i = 0; i < maze.length; i++){
+          for(int y = 0; y < maze[i].length; y++){
+            ans += maze[i][y] + "";
+            if(y == maze[i].length - 1) ans += "\n";
+          }
+        }
+        return ans;
     }
 
 
